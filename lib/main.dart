@@ -6,11 +6,12 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
-      MaterialApp(title: 'Welcome to Flutter', home: RandomWords());
+      MaterialApp(title: 'Startup Name Generator', home: RandomWords());
 }
 
 class RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
+  final _saved = Set<WordPair>();
   final _biggerFont = const TextStyle(fontSize: 18.0);
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -18,7 +19,7 @@ class RandomWordsState extends State<RandomWords> {
         body: _buildSuggestions(),
       );
 
-  Widget _buildSuggestions() {
+  ListView _buildSuggestions() {
     return ListView.builder(
         padding: const EdgeInsets.all(16),
         itemBuilder: (_, incrementingIndex) {
@@ -31,8 +32,19 @@ class RandomWordsState extends State<RandomWords> {
         });
   }
 
-  Widget _buildRow(WordPair wordPair) {
-    return ListTile(title: Text(wordPair.asPascalCase, style: _biggerFont));
+  ListTile _buildRow(WordPair wordPair) {
+    final trailing = _getTrailing(wordPair);
+    return ListTile(
+        title: Text(wordPair.asPascalCase, style: _biggerFont),
+        trailing: trailing);
+  }
+
+  Icon _getTrailing(WordPair wordPair) {
+    final isSaved = _saved.contains(wordPair);
+    final savedTrailing = Icon(Icons.favorite, color: Colors.red);
+    final unSavedTrailing = Icon(Icons.favorite_border);
+    final trailing = isSaved ? savedTrailing : unSavedTrailing;
+    return trailing;
   }
 }
 
