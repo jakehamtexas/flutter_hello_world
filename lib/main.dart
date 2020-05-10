@@ -33,14 +33,32 @@ class RandomWordsState extends State<RandomWords> {
   }
 
   ListTile _buildRow(WordPair wordPair) {
-    final trailing = _getTrailing(wordPair);
-    return ListTile(
-        title: Text(wordPair.asPascalCase, style: _biggerFont),
-        trailing: trailing);
+    final isSaved = _saved.contains(wordPair);
+    final trailing = _getRandomWordTrailing(isSaved);
+    final toggleSave = _getWordPairToggleSave(isSaved, wordPair);
+    final wordPairText = _getWordPairText(wordPair);
+    return ListTile(title: wordPairText, trailing: trailing, onTap: toggleSave);
   }
 
-  Icon _getTrailing(WordPair wordPair) {
-    final isSaved = _saved.contains(wordPair);
+  Text _getWordPairText(WordPair wordPair) {
+    final wordPairText = Text(wordPair.asPascalCase, style: _biggerFont);
+    return wordPairText;
+  }
+
+  Function _getWordPairToggleSave(bool isSaved, WordPair wordPair) {
+    final onTap = () {
+      setState(() {
+        if (isSaved) {
+          _saved.remove(wordPair);
+        } else {
+          _saved.add(wordPair);
+        }
+      });
+    };
+    return onTap;
+  }
+
+  Icon _getRandomWordTrailing(bool isSaved) {
     final savedTrailing = Icon(Icons.favorite, color: Colors.red);
     final unSavedTrailing = Icon(Icons.favorite_border);
     final trailing = isSaved ? savedTrailing : unSavedTrailing;
