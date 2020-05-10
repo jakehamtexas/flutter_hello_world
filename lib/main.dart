@@ -15,9 +15,34 @@ class RandomWordsState extends State<RandomWords> {
   final _biggerFont = const TextStyle(fontSize: 18.0);
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text('Startup Name Generator')),
+        appBar: AppBar(
+          title: Text('Startup Name Generator'),
+          actions: <Widget>[
+            IconButton(icon: Icon(Icons.list), onPressed: _pushSavedRoute)
+          ],
+        ),
         body: _buildSuggestions(),
       );
+
+  void _pushSavedRoute() {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (final context) {
+      final Iterable<ListTile> tiles = _saved.map((final pair) => ListTile(
+            title: Text(
+              pair.asPascalCase,
+              style: _biggerFont,
+            ),
+          ));
+      final divided =
+          ListTile.divideTiles(context: context, tiles: tiles).toList();
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Saved Suggestions'),
+        ),
+        body: ListView(children: divided),
+      );
+    }));
+  }
 
   ListView _buildSuggestions() {
     return ListView.builder(
@@ -37,7 +62,9 @@ class RandomWordsState extends State<RandomWords> {
     final trailing = _getRandomWordTrailing(isSaved);
     final toggleSave = _getWordPairToggleSave(isSaved, wordPair);
     final wordPairText = _getWordPairText(wordPair);
-    return ListTile(title: wordPairText, trailing: trailing, onTap: toggleSave);
+    final row =
+        ListTile(title: wordPairText, trailing: trailing, onTap: toggleSave);
+    return row;
   }
 
   Text _getWordPairText(WordPair wordPair) {
