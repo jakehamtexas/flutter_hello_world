@@ -5,8 +5,10 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) =>
-      MaterialApp(title: 'Startup Name Generator', home: RandomWords());
+  Widget build(BuildContext context) => MaterialApp(
+      title: 'Startup Name Generator',
+      home: RandomWords(),
+      theme: ThemeData(primaryColor: Colors.deepPurple));
 }
 
 class RandomWordsState extends State<RandomWords> {
